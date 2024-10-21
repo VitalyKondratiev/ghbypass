@@ -7,7 +7,7 @@ You must have server with wildcard DNS A entry (for example - *example.org*)
 
 ```
 make build-server
-make run-server --host=<example.org>
+docker run -d -p 8081:80 ghbypass-server:latest --host=<example.org>
 ```
 You can go to any subdomain on your server (for example *test.example.org*), and get client binaries from your server
 
