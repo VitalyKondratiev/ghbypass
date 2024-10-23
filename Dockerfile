@@ -19,4 +19,3 @@ COPY --from=builder /app/client-windows.exe /usr/local/bin/client-windows.exe
 COPY --from=builder /app/client-macos /usr/local/bin/client-macos
 COPY --from=builder /app/server /usr/local/bin/ghbypass-server
 ENTRYPOINT ["/usr/local/bin/ghbypass-server"]
-CMD ["sh", "-c", "/usr/local/bin/ghbypass-server"]

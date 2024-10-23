@@ -2,11 +2,8 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	pwebsocket "ghbypass-client/pkg/websocket"
 	"log"
-
-	"github.com/gorilla/websocket"
 )
 
 var subdomain string
@@ -26,11 +23,7 @@ func main() {
 	log.Println("Subdomain set to:", subdomain)
 	log.Println("Local address for expose:", expose)
 
-	wsURL := fmt.Sprintf("ws://%s/ws?subdomain=%s", proxy, subdomain)
-	conn, _, err := websocket.DefaultDialer.Dial(wsURL, nil)
-	if err != nil {
-		log.Fatal("WebSocket dial error:", err)
-	}
+	conn := pwebsocket.ConnectToWsServer(proxy, subdomain)
 	defer conn.Close()
 
 	pwebsocket.HandleRequests(conn, expose)
