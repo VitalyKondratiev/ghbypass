@@ -32,11 +32,10 @@ func HandleWebSocket(clients map[string]*Client, mu *sync.Mutex) http.HandlerFun
 			return
 		}
 
-		client := &Client{Conn: conn}
 		mu.Lock()
 		_, hasClient := clients[subdomain]
 		if !hasClient {
-			clients[subdomain] = client
+			clients[subdomain] = &Client{Conn: conn}
 		}
 		mu.Unlock()
 

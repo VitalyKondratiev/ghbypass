@@ -1,0 +1,74 @@
+<html>
+
+<head>
+    <style>
+        body {
+            font-family: monospace;
+        }
+
+        .container {
+            width: 75vw;
+            border: 1px solid #2b40d1;
+            margin: 0 auto;
+            background: #eee;
+            outline: 1px solid #999;
+            border-radius: 5px;
+        }
+
+        .header {
+            padding: 0 15px;
+            margin: 0;
+            background: #2b40d1;
+            color: #fff;
+            font-weight: initial;
+        }
+
+        .content {
+            padding: 5px 15px;
+        }
+
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        ul li {
+            margin-bottom: 5px;
+        }
+
+        ul.list {
+            padding-left: 15px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="header">Client not connected</h1>
+        <div class="content">
+            <p>Download the client for your platform:</p>
+            <ul class="list">
+                <li><a href="/download/client-linux">Linux (64-bit)</a></li>
+                <li><a href="/download/client-windows.exe">Windows (64-bit)</a></li>
+                <li><a href="/download/client-macos">macOS (64-bit)</a></li>
+            </ul>
+            <div>
+                <p>Flags:</p>
+                <ul>
+                    <li><i>--subdomain</i>&nbsp;- Available subdomain on this server like current, for example <b id="example-subdomain"></b></li>
+                    <li><i>--proxy</i>&nbsp;- usually proxy can contain current domain (with, or without port), for use
+                        this server as proxy, for example <b id="example-proxy"></b></li>
+                    <li><i>--expose</i>&nbsp;- local hosts entry for expose or ip:port, for example <b id="example-expose">local.dev</b>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script>
+        let subdomain = location.host.split('.')[0]
+        document.getElementById('example-subdomain').textContent = subdomain;
+        document.getElementById('example-proxy').textContent = location.host;
+    </script>
+</body>
+
+</html>

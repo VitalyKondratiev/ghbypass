@@ -1,6 +1,7 @@
 package websocket
 
 import (
+	_ "embed"
 	"encoding/json"
 	"fmt"
 	"ghbypass-server/internal/utils"
@@ -13,6 +14,9 @@ import (
 	"github.com/google/uuid"
 	"github.com/gorilla/websocket"
 )
+
+//go:embed "content/free_subdomain.html"
+var htmlContent string
 
 type RequestData struct {
 	Method    string              `json:"method"`
@@ -41,19 +45,7 @@ func HandleRequest(baseDomain string, clients map[string]*Client, mu *sync.Mutex
 				return
 			}
 			w.Header().Set("Content-Type", "text/html")
-			fmt.Fprintf(w, `
-				<body style="font-family: monospace;background: #cccccc;">
-				<div style="width: 75vw;border: 1px solid black;padding: 0 15px;margin: 0 auto;background: #eeeeee;">
-					<h1>Client not connected</h1>
-					<p>Download the client for your platform:</p>
-					<ul>
-						<li><a href="/download/client-linux">Linux (64-bit)</a></li>
-						<li><a href="/download/client-windows.exe">Windows (64-bit)</a></li>
-						<li><a href="/download/client-macos">macOS (64-bit)</a></li>
-					</ul>
-				</div>
-				</body>
-			`)
+			fmt.Fprintf(w, htmlContent)
 			return
 		}
 		requestID := uuid.New().String()

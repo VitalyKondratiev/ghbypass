@@ -13,11 +13,11 @@ var expose string
 func main() {
 	flag.StringVar(&subdomain, "subdomain", "", "Subdomain on proxy host")
 	flag.StringVar(&proxy, "proxy", "", "Proxy address")
-	flag.StringVar(&expose, "expose", "localhost:8081", "URL on local machine to expose")
+	flag.StringVar(&expose, "expose", "", "URL on local machine to expose")
 	flag.Parse()
 
-	if subdomain == "" || proxy == "" {
-		log.Fatal("subdomain and proxy are required")
+	if subdomain == "" || proxy == "" || expose == "" {
+		log.Fatal("--subdomain, --proxy and --expose options are required")
 	}
 
 	log.Println("Subdomain set to:", subdomain)
