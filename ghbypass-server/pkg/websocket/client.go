@@ -2,8 +2,10 @@ package websocket
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"sync"
+	"time"
 
 	"github.com/gorilla/websocket"
 )
@@ -26,32 +28,55 @@ func HandleWebSocket(clients map[string]*Client, mu *sync.Mutex) http.HandlerFun
 
 		conn, err := upgrader.Upgrade(w, r, nil)
 		if err != nil {
-			fmt.Println("WebSocket upgrade error:", err)
+			fmt.Println("Websocket upgrade error:", err)
 			return
 		}
 
 		client := &Client{Conn: conn}
 		mu.Lock()
-		clients[subdomain] = client
+		_, hasClient := clients[subdomain]
+		if !hasClient {
+			clients[subdomain] = client
+		}
 		mu.Unlock()
 
-		fmt.Println("Client connected", subdomain)
+		if hasClient {
+			closeConnection(conn, "Subdomain is taken")
+			log.Println("Client trying use already taken subdomain:", subdomain)
+			return
+		}
+
+		log.Println("Client connected:", subdomain)
 
 		defer func() {
 			mu.Lock()
 			delete(clients, subdomain)
 			mu.Unlock()
-			conn.Close()
-			fmt.Println("Client disconnected", subdomain)
+			closeConnection(conn, "Client disconnected")
+			log.Println("Client disconnected:", subdomain)
 		}()
 
 		for {
 			_, message, err := conn.ReadMessage()
 			if err != nil {
-				fmt.Println("Read error:", err)
+				log.Println("Read error:", err)
 				break
 			}
 			HandleResponse(message)
 		}
+	}
+}
+
+func closeConnection(conn *websocket.Conn, cause string) {
+	err := conn.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, cause))
+	if err != nil {
+		log.Println("Error sending close message:", err)
+	}
+
+	time.Sleep(1 * time.Second)
+
+	err = conn.Close()
+	if err != nil {
+		log.Println("Error closing websocket connection:", err)
 	}
 }

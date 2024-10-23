@@ -23,8 +23,8 @@ func main() {
 	log.Println("Subdomain set to:", subdomain)
 	log.Println("Local address for expose:", expose)
 
-	conn := pwebsocket.ConnectToWsServer(proxy, subdomain)
+	conn := pwebsocket.GetWebsocketConnection(proxy, subdomain)
 	defer conn.Close()
 
-	pwebsocket.HandleRequests(conn, expose)
+	pwebsocket.HandleWebsocketRequests(conn, expose)
 }
